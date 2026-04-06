@@ -3,7 +3,10 @@ package handler
 import (
 	"fmt"
 	"net"
+	"strings"
 )
+
+const PING = "PING"
 
 type ConnectionHandler struct{}
 
@@ -22,8 +25,16 @@ func (h *ConnectionHandler) HandleConnection(conn net.Conn) {
 			return
 		}
 		message := string(buffer[:n])
+		message = strings.TrimSpace(message)
+
+		switch message {
+		case PING:
+			conn.Write([]byte("PONG\n"))
+		default:
+			conn.Write([]byte("UNKNOWN COMMAND\n"))
+		}
 		fmt.Println("Received message:", message)
 
-		conn.Write([]byte("OK" + message))
+		conn.Write([]byte("OK " + message))
 	}
 }

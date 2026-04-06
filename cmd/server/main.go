@@ -30,7 +30,6 @@ func main() {
 	defer conn.Close()
 
 	app := cli.NewApp()
-
 	app.RegisterCommand("ping", func(args []string) error {
 		_, err := conn.Write([]byte("PING\n"))
 		if err != nil {
@@ -46,6 +45,7 @@ func main() {
 		fmt.Println(string(buf[:n]))
 		return nil
 	})
+	app.Run()
 
 	ctx, cancel := context.WithCancel(context.Background())
 
